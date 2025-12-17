@@ -1,0 +1,61 @@
+# Converted to application.properties
+# This YAML configuration was converted to application.properties.
+# Keep this file for reference or remove it to avoid duplicate/conflicting configuration.
+
+// filepath: c:\Users\Administrator\Downloads\files\email-service\src\main\resources\application.yml
+server:
+  port: 8082
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: email-service
+    
+  datasource:
+    url: jdbc:h2:mem:emaildb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+    
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: email-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.microservices.email.event.OrderEvent
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+      
+logging:
+  level:
+    com.microservices.email: DEBUG
+    org.springframework.kafka: INFO
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
